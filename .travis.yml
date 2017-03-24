@@ -14,8 +14,8 @@ jdk:
   - oraclejdk8
 
 # Support library
-#  - extra-android-support
-# - extra-android-m2repository
+  - extra-android-support
+  - extra-android-m2repository
 
 licenses:
   - 'android-sdk-preview-license-.+'
