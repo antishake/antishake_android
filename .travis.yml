@@ -19,8 +19,8 @@ android:
     - android-$EMULATOR_API_LEVEL
 
 # if you need to run emulator(s) during your tests
-  - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
-  - sys-img-armeabi-v7a-android-$ANDROID_API_LEVEL
+    - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
+    - sys-img-armeabi-v7a-android-$ANDROID_API_LEVEL
 
 # Support library
     - extra-android-support
