@@ -6,6 +6,9 @@ android:
     - platform-tools
     - build-tools-24.0.0
     - android-25
+# Support library
+    - extra-android-support
+    - extra-android-m2repository
 
 script:
    - ./gradlew build connectedCheck
@@ -13,9 +16,7 @@ script:
 jdk:
   - oraclejdk8
 
-# Support library
-  - extra-android-support
-  - extra-android-m2repository
+
 
 licenses:
   - 'android-sdk-preview-license-.+'
