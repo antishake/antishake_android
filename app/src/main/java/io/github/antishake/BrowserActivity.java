@@ -1,5 +1,8 @@
 package io.github.antishake;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -37,6 +40,13 @@ public class BrowserActivity extends AppCompatActivity implements TextFileFragme
    */
   private ViewPager mViewPager;
 
+  private SensorManager sensorManager;
+  private Sensor linearAccelerometer;
+
+  private AntiShakeWorker antiShakeWorker;
+  // TODO Get sampling rate from config
+  private int samplingRate = 20000;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -55,17 +65,23 @@ public class BrowserActivity extends AppCompatActivity implements TextFileFragme
     TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
     tabLayout.setupWithViewPager(mViewPager);
 
-//    FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//    fab.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View view) {
-//        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//          .setAction("Action", null).show();
-//      }
-//    });
+    sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+    linearAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
+    antiShakeWorker = new AntiShakeWorker();
   }
 
+  @Override
+  protected void onResume() {
+    super.onResume();
+    sensorManager.registerListener(antiShakeWorker, linearAccelerometer, samplingRate);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    sensorManager.unregisterListener(antiShakeWorker);
+  }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
