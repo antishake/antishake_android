@@ -1,7 +1,8 @@
 package io.github.antishake;
 
-import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,13 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
-import android.widget.ListView;
+
 import android.widget.TextView;
-
-import java.io.File;
-import java.util.ArrayList;
-
 import io.github.antishake.browser.TextFileFragment;
 import io.github.antishake.browser.VideoFileFragment;
 import io.github.antishake.dummy.DummyContent;
@@ -44,74 +40,47 @@ public class BrowserActivity extends AppCompatActivity implements TextFileFragme
    */
   private ViewPager mViewPager;
 
+  private SensorManager sensorManager;
+  private Sensor linearAccelerometer;
+
+  private AntiShakeWorker antiShakeWorker;
+  // TODO Get sampling rate from config
+  private int samplingRate = 20000;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_browser);
+
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
-    final ListView lv = (ListView) findViewById(R.id.lv);
-
-    FloatingActionButton fab= (FloatingActionButton) findViewById(R.id.fab);
-    fab.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v){
-        lv.setAdapter(new CustomAdapter(BrowserActivity.this,getPDFs()));
-      }
-    });
-  }
-
-  private ArrayList<PDFDocs> getPDFs()
-
-  {
-
-    ArrayList<PDFDocs> pdfDocs = new ArrayList<>();
-    //TARGET FOLDER
-    File downloadsFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-    PDFDocs pdfDoc;
-    if (downloadsFolder.exists()) {
-      //GET ALL FILES IN DOWNLOAD FOLDER
-      File[] files = downloadsFolder.listFiles();
-
-      //LOOP THROUGH THOSE FILES GETTING NAME AND URI
-
-      for (int i = 0; i < files.length; i++) {
-        File file = files[i];
-        if (file.getPath().endsWith("pdf")) {
-          pdfDoc = new PDFDocs();
-          pdfDoc.setName(file.getName());
-          pdfDoc.setPath(file.getAbsolutePath());
-          pdfDocs.add(pdfDoc);
-        }
-      }
-    }
-
-
-
-
     // Create the adapter that will return a fragment for each of the three
     // primary sections of the activity.
-    mSectionsPagerAdapter = new
-      SectionsPagerAdapter(getSupportFragmentManager());
+    mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
     // Set up the ViewPager with the sections adapter.
-    mViewPager = (ViewPager)
-
-      findViewById(R.id.container);
+    mViewPager = (ViewPager) findViewById(R.id.container);
     mViewPager.setAdapter(mSectionsPagerAdapter);
 
     TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
     tabLayout.setupWithViewPager(mViewPager);
 
-//    FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//    fab.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View view) {
-//        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//          .setAction("Action", null).show();
-//      }
-//    });
-    return pdfDocs;
+    sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+    linearAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+
+    antiShakeWorker = new AntiShakeWorker();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    sensorManager.registerListener(antiShakeWorker, linearAccelerometer, samplingRate);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    sensorManager.unregisterListener(antiShakeWorker);
   }
 
   @Override
