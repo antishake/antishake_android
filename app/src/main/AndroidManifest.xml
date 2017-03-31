@@ -23,6 +23,15 @@
             android:enabled="true"
             android:exported="true">
     </service>
+    <activity android:name=".TestScreenActivity"/>
+    <receiver android:name=".TestScreenActivity$TransVectReceiver">
+      <intent-filter>
+        <action android:name="TransVect"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="AccelVal" />
+      </intent-filter>
+    </receiver>
   </application>
 
 </manifest>

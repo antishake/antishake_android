@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:ap="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+  <com.androidplot.xy.XYPlot
+          style="@style/APDefacto.Light"
+          android:id="@+id/graph"
+          android:layout_width="fill_parent"
+          android:layout_height="fill_parent"
+          ap:title="Accel vs Vector"
+          ap:lineLabels="left|bottom"
+          ap:lineLabelRotationBottom="-45"/>
+
+  <ImageView
+          android:id="@+id/point"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_margin="20dp"
+          android:layout_centerInParent="true"
+          android:src="@android:drawable/alert_dark_frame"/>
+</RelativeLayout>

@@ -94,6 +94,9 @@ public class BrowserActivity extends AppCompatActivity implements TextFileFragme
 
   @Override
   public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    Intent intent = new Intent(this, TestScreenActivity.class);
+    startActivity(intent);
+    System.out.println("Interaction?");
   }
 
   /**
