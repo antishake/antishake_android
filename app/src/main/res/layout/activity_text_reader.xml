@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,8 +8,8 @@
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
-    <TextView
-        android:id="@+id/textView"
+    <com.github.barteksc.pdfviewer.PDFView
+        android:id="@+id/pdfView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -18,15 +18,14 @@
         android:textColor="#33b5e5"
         android:textSize="50sp"
         android:textStyle="bold"
-        android:layout_toLeftOf="@+id/scrollBar"
+        android:layout_toStartOf="@+id/scrollBar"
         />
 
-    <ScrollBar
-        android:id="@+id/scrollBar"
+    <com.github.barteksc.pdfviewer.ScrollBar
+        android:id="@id/scrollBar"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:alignParentRight="true"
-        android:alignParentEnd="true"
+        android:layout_alignParentEnd="true"
 
         />
 
@@ -59,4 +58,4 @@
         </LinearLayout>
     </FrameLayout>
 
-</FrameLayout>
+</RelativeLayout>

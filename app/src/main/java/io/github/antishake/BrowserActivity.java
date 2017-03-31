@@ -1,5 +1,7 @@
 package io.github.antishake;
 
+import android.os.Environment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,8 +16,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.ScrollView;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import java.io.File;
+import java.util.ArrayList;
+
 import io.github.antishake.browser.TextFileFragment;
 import io.github.antishake.browser.VideoFileFragment;
 import io.github.antishake.dummy.DummyContent;
@@ -41,15 +48,56 @@ public class BrowserActivity extends AppCompatActivity implements TextFileFragme
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_browser);
-
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
+    final ListView lv = (ListView) findViewById(R.id.lv);
+
+    FloatingActionButton fab= (FloatingActionButton) findViewById(R.id.fab);
+    fab.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v){
+        lv.setAdapter(new CustomAdapter(BrowserActivity.this,getPDFs()));
+      }
+    });
+  }
+
+  private ArrayList<PDFDocs> getPDFs()
+
+  {
+
+    ArrayList<PDFDocs> pdfDocs = new ArrayList<>();
+    //TARGET FOLDER
+    File downloadsFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+    PDFDocs pdfDoc;
+    if (downloadsFolder.exists()) {
+      //GET ALL FILES IN DOWNLOAD FOLDER
+      File[] files = downloadsFolder.listFiles();
+
+      //LOOP THROUGH THOSE FILES GETTING NAME AND URI
+
+      for (int i = 0; i < files.length; i++) {
+        File file = files[i];
+        if (file.getPath().endsWith("pdf")) {
+          pdfDoc = new PDFDocs();
+          pdfDoc.setName(file.getName());
+          pdfDoc.setPath(file.getAbsolutePath());
+          pdfDocs.add(pdfDoc);
+        }
+      }
+    }
+
+
+
+
     // Create the adapter that will return a fragment for each of the three
     // primary sections of the activity.
-    mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+    mSectionsPagerAdapter = new
+      SectionsPagerAdapter(getSupportFragmentManager());
 
     // Set up the ViewPager with the sections adapter.
-    mViewPager = (ViewPager) findViewById(R.id.container);
+    mViewPager = (ViewPager)
+
+      findViewById(R.id.container);
     mViewPager.setAdapter(mSectionsPagerAdapter);
 
     TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -63,9 +111,8 @@ public class BrowserActivity extends AppCompatActivity implements TextFileFragme
 //          .setAction("Action", null).show();
 //      }
 //    });
-
+    return pdfDocs;
   }
-
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
