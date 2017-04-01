@@ -1,6 +1,7 @@
 package io.github.antishake;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.support.design.widget.TabLayout;
@@ -108,6 +109,9 @@ public class BrowserActivity extends AppCompatActivity implements TextFileFragme
   @Override
   public void onListFragmentInteraction(DummyContent.DummyItem item) {
     System.out.println("Interaction?");
+
+    Intent intent = new Intent(this, TextReader.class);
+    startActivity(intent);
   }
 
   /**

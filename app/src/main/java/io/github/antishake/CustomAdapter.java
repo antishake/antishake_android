@@ -48,7 +48,7 @@ public class CustomAdapter extends BaseAdapter {
      view = LayoutInflater.from(c).inflate(R.layout.fragment_textfile, viewGroup, false); //look
    }
     final PDFDocs pdfDocs = (PDFDocs) this.getItem(i);
-    TextView nameTxt = (TextView) view.findViewById(R.id.nameTxt);
+    TextView nameTxt = (TextView) view.findViewById(R.id.id);
     ImageView img = (ImageView) view.findViewById(R.id.pdfImage);
 
     // BIND DATA

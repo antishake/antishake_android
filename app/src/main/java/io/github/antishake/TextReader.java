@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.Loader;
 import android.graphics.Path;
+import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -112,8 +113,9 @@ public class TextReader extends AppCompatActivity {
      //UNPACK DATA FROM INTENT
 
     Intent i = this.getIntent();
-    String path= i.getExtras().getString("PATH");
+    String path= Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/floodforecasting.pdf";//i.getExtras().getString("PATH");
 
+    System.out.println(path);
      //GET THE PDF FILE
     File file = new File(path);
 
@@ -129,7 +131,9 @@ public class TextReader extends AppCompatActivity {
         }
       }).load();
 
-  }
+  } else {
+      System.out.println("Cannot read file");
+    }
 
 
     mVisible = true;
