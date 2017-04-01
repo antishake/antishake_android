@@ -24,10 +24,11 @@ public class CustomAdapter extends BaseAdapter {
     this.c = c;
     this.pdfDocs = pdfDocs;
   }
-        @Override
+  @Override
        public int getCount() {
        return pdfDocs.size();
   }
+
   @Override
   public Object getItem(int i) {
     return pdfDocs.get(i);
@@ -41,14 +42,18 @@ public class CustomAdapter extends BaseAdapter {
   @Override
   public View getView(int i, View view, ViewGroup viewGroup) {
    if (view==null) {
+
         //INFLATE CUSTOM LAYOUT
+
      view = LayoutInflater.from(c).inflate(R.layout.fragment_textfile, viewGroup, false); //look
    }
     final PDFDocs pdfDocs = (PDFDocs) this.getItem(i);
     TextView nameTxt = (TextView) view.findViewById(R.id.nameTxt);
     ImageView img = (ImageView) view.findViewById(R.id.pdfImage);
+
     // BIND DATA
     nameTxt.setText(pdfDocs.getName());
+
     //img.setImageResource(R.drawable.pdf_icon);
 
 
@@ -64,7 +69,7 @@ public class CustomAdapter extends BaseAdapter {
 
 
     //OPEN FOR VIEW
-  public void openPDFView(String path)
+  private void openPDFView(String path)
   {
     Intent i= new Intent(c, TextReader.class);
     i.putExtra("Path", path);

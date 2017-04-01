@@ -27,19 +27,8 @@
             android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".PDFDocs"
-            android:exported="true" />
-        <activity
-            android:name=".MainActivity"
-            android:label="ListView PDF"
-            android:exported="true"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="true"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
     </application>
 
 </manifest>
