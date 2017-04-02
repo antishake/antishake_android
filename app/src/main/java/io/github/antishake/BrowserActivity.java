@@ -1,6 +1,7 @@
 package io.github.antishake;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.support.design.widget.TabLayout;
@@ -40,13 +41,6 @@ public class BrowserActivity extends AppCompatActivity implements TextFileFragme
    */
   private ViewPager mViewPager;
 
-  private SensorManager sensorManager;
-  private Sensor linearAccelerometer;
-
-  private AntiShakeWorker antiShakeWorker;
-  // TODO Get sampling rate from config
-  private int samplingRate = 20000;
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -64,23 +58,16 @@ public class BrowserActivity extends AppCompatActivity implements TextFileFragme
 
     TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
     tabLayout.setupWithViewPager(mViewPager);
-
-    sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-    linearAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-
-    antiShakeWorker = new AntiShakeWorker();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    sensorManager.registerListener(antiShakeWorker, linearAccelerometer, samplingRate);
   }
 
   @Override
-  protected void onPause() {
-    super.onPause();
-    sensorManager.unregisterListener(antiShakeWorker);
+  protected void onStop() {
+    super.onStop();
   }
 
   @Override
@@ -107,7 +94,6 @@ public class BrowserActivity extends AppCompatActivity implements TextFileFragme
 
   @Override
   public void onListFragmentInteraction(DummyContent.DummyItem item) {
-    System.out.println("Interaction?");
   }
 
   /**
