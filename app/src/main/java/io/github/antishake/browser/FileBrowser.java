@@ -1,6 +1,7 @@
 package io.github.antishake.browser;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import io.github.antishake.R;
 
 public class FileBrowser extends AppCompatActivity {
 

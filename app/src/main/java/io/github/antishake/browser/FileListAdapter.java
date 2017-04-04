@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.content.Context;
 import android.widget.TextView;
+import io.github.antishake.R;
 
 import java.util.Date;
 import java.util.List;
@@ -43,7 +44,7 @@ public class FileListAdapter extends BaseAdapter {
 
   @Override
   public View getView(int i, View view, ViewGroup viewGroup) {
-    View v=View.inflate(context,R.layout.filelist,null);
+    View v=View.inflate(context, R.layout.filelist,null);
     TextView filename=(TextView)v.findViewById(R.id.filename);
     TextView filesize=(TextView)v.findViewById(R.id.filesize);
     TextView fileModified=(TextView)v.findViewById(R.id.modified);
