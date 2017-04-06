@@ -1,11 +1,10 @@
 package io.github.antishake.browser;
-import java.util.Date;
 
 /**
  * Created by Geofe on 3/31/17.
  */
 
-public class MyFile {
+public class FileItem {
 
   private String name;
   private long filesize;
@@ -14,12 +13,12 @@ public class MyFile {
 
   //constructo for the class
 
-  public MyFile(String name, long filesize, long dateModified,String path) {
+  public FileItem(String name, long filesize, long dateModified, String path) {
 
     this.name = name;
     this.filesize = filesize;
-    DateModified = dateModified;
-    this.path=path;
+    this.DateModified = dateModified;
+    this.path = path;
   }
 
   //getter,setter
