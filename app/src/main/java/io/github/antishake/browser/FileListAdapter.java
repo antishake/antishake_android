@@ -17,12 +17,12 @@ import java.util.List;
 public class FileListAdapter extends BaseAdapter {
 
   private Context context;
-  private List<MyFile> mfile;
+  private List<FileItem> mfile;
 
   //constructor
 
 
-  public FileListAdapter(Context context, List<MyFile> mfile) {
+  public FileListAdapter(Context context, List<FileItem> mfile) {
     this.context = context;
     this.mfile = mfile;
   }
