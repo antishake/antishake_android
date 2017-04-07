@@ -1,51 +1,66 @@
 package io.github.antishake.browser;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import io.github.antishake.R;
-import io.github.antishake.dummy.DummyContent.DummyItem;
+import io.github.antishake.TextReader;
 
+import java.util.Date;
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link TextFileFragment.OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
  */
 public class MyTextFileRecyclerViewAdapter extends RecyclerView.Adapter<MyTextFileRecyclerViewAdapter.ViewHolder> {
 
-  private final List<DummyItem> mValues;
-  private final TextFileFragment.OnListFragmentInteractionListener mListener;
+  private final List<TextFileItem> mValues;
+  private final Context context;
 
-  public MyTextFileRecyclerViewAdapter(List<DummyItem> items, TextFileFragment.OnListFragmentInteractionListener listener) {
-    mValues = items;
-    mListener = listener;
+  private String rootPath;
+
+  public MyTextFileRecyclerViewAdapter(Context context, String rootPath) {
+    this.context = context;
+    this.rootPath = rootPath;
+
+    mValues = FileHelper.retrieveTextFiles(rootPath);
   }
 
   @Override
   public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View view = LayoutInflater.from(parent.getContext())
-      .inflate(R.layout.fragment_textfile, parent, false);
+      .inflate(R.layout.filelist, parent, false);
     return new ViewHolder(view);
   }
 
   @Override
   public void onBindViewHolder(final ViewHolder holder, int position) {
     holder.mItem = mValues.get(position);
-    holder.mIdView.setText(mValues.get(position).id);
-    holder.mContentView.setText(mValues.get(position).content);
+    holder.mFilename.setText(mValues.get(position).getName());
+    holder.mFilesize.setText(String.valueOf(mValues.get(position).getFilesize()));
+    // TODO Use simple date formatter to get a shorter string for this
+    holder.mModified.setText(new Date(mValues.get(position).getDateModified()).toString());
 
     holder.mView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        if (null != mListener) {
-          // Notify the active callbacks interface (the activity, if the
-          // fragment is attached to one) that an item has been selected.
-          mListener.onListFragmentInteraction(holder.mItem);
+        // Load up the contents of folder
+        // or if it is a file, open TextReader activity
+        TextFileItem item = holder.mItem;
+        if (FileHelper.isDirectory(item.getPath())) {
+          Log.d("AS", "Opening directory " + item.getPath());
+          mValues.clear();
+          mValues.addAll(FileHelper.retrieveTextFiles(item.getPath()));
+          notifyDataSetChanged();
+        } else if (FileHelper.isFile(item.getPath())) {
+          Log.d("AS", "Opening file " + item.getPath());
+          Intent intent = new Intent(context, TextReader.class);
+          intent.putExtra("PATH", item.getPath());
+          context.startActivity(intent);
         }
       }
     });
@@ -58,20 +73,22 @@ public class MyTextFileRecyclerViewAdapter extends RecyclerView.Adapter<MyTextFi
 
   public class ViewHolder extends RecyclerView.ViewHolder {
     public final View mView;
-    public final TextView mIdView;
-    public final TextView mContentView;
-    public DummyItem mItem;
+    public final TextView mFilename;
+    public final TextView mFilesize;
+    public final TextView mModified;
+    public TextFileItem mItem;
 
     public ViewHolder(View view) {
       super(view);
       mView = view;
-      mIdView = (TextView) view.findViewById(R.id.id);
-      mContentView = (TextView) view.findViewById(R.id.content);
+      mFilename = (TextView) view.findViewById(R.id.filename);
+      mFilesize = (TextView) view.findViewById(R.id.filesize);
+      mModified = (TextView) view.findViewById(R.id.modified);
     }
 
     @Override
     public String toString() {
-      return super.toString() + " '" + mContentView.getText() + "'";
+      return super.toString() + " '" + mFilesize.getText() + "'";
     }
   }
 }

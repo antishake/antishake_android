@@ -113,7 +113,7 @@ public class TextReader extends AppCompatActivity {
      //UNPACK DATA FROM INTENT
 
     Intent i = this.getIntent();
-    String path= Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/floodforecasting.pdf";//i.getExtras().getString("PATH");
+    String path= i.getExtras().getString("PATH");
 
     System.out.println(path);
      //GET THE PDF FILE

@@ -10,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import io.github.antishake.R;
-import io.github.antishake.dummy.DummyContent;
-import io.github.antishake.dummy.DummyContent.DummyItem;
 
 /**
  * A fragment representing a list of Items.
@@ -67,7 +65,7 @@ public class VideoFileFragment extends Fragment {
       } else {
         recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
       }
-      recyclerView.setAdapter(new MyVideoFileRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+//      recyclerView.setAdapter(new MyVideoFileRecyclerViewAdapter(DummyContent.ITEMS, mListener));
     }
     return view;
   }
@@ -76,12 +74,6 @@ public class VideoFileFragment extends Fragment {
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-    if (context instanceof OnListFragmentInteractionListener) {
-      mListener = (OnListFragmentInteractionListener) context;
-    } else {
-      throw new RuntimeException(context.toString()
-        + " must implement OnListFragmentInteractionListener");
-    }
   }
 
   @Override
@@ -102,6 +94,6 @@ public class VideoFileFragment extends Fragment {
    */
   public interface OnListFragmentInteractionListener {
     // TODO: Update argument type and name
-    void onListFragmentInteraction(DummyItem item);
+    void onListFragmentInteraction(VideoFileItem item);
   }
 }
