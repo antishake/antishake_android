@@ -11,7 +11,7 @@ public class FileItem {
   private long DateModified;
   private String path;
 
-  //constructo for the class
+  //constructor for the class
 
   public FileItem(String name, long filesize, long dateModified, String path) {
 

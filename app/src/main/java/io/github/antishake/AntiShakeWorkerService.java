@@ -9,6 +9,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.util.Log;
+import io.github.antishake.utils.AntiShakeUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ public class AntiShakeWorkerService extends Service implements SensorEventListen
   private int samplingRate = 20000;
 
   public AntiShakeWorkerService() {
-    antiShake = new AntiShake(this);
+    antiShake = new AntiShake(this, AntiShakeUtils.getConfigProperties(getApplicationContext()));
   }
 
   @Override
