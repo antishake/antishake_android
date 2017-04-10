@@ -17,7 +17,7 @@ import android.view.MenuItem;
 import io.github.antishake.browser.TextFileFragment;
 import io.github.antishake.browser.VideoFileFragment;
 
-public class BrowserActivity extends AppCompatActivity {
+public class BrowserActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener{
 
   /**
    * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -109,6 +109,21 @@ public class BrowserActivity extends AppCompatActivity {
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public void onTabSelected(TabLayout.Tab tab) {
+    mViewPager.setCurrentItem(tab.getPosition());
+  }
+
+  @Override
+  public void onTabUnselected(TabLayout.Tab tab) {
+
+  }
+
+  @Override
+  public void onTabReselected(TabLayout.Tab tab) {
+
   }
 
   /**
