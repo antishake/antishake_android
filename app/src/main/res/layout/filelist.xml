@@ -1,35 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
+              android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:paddingBottom="5dp"
               android:paddingLeft="10dp"
               android:paddingRight="10dp"
               android:paddingTop="5dp"
               android:orientation="vertical">
+
+  <android.support.v7.widget.AppCompatCheckedTextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:id="@+id/filename"
+          android:text="File name"
+          android:textColor="#616161"/>
+
+  <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="horizontal">
+
     <android.support.v7.widget.AppCompatCheckedTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/filename"
-            android:text="File name"
-            android:textSize="20dp"
-            android:textColor="#1976D2"/>
-    <android.support.v7.widget.AppCompatCheckedTextView
-            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/filesize"
-            android:text="size"
-            android:textColor="#8BC34A"
-            android:textSize="18dp"
-    />
-    <android.support.v7.widget.AppCompatCheckedTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16dp"
-            android:textColor="#2196F3"
-            android:id="@+id/modified"
-            android:text="00/00/0000"/>
+            android:text="4096"
+            android:textColor="#757575"
+            android:textSize="12sp"
+            />
 
+    <android.support.v7.widget.AppCompatCheckedTextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#757575"
+            android:id="@+id/modified"
+            android:text="11/11/2050"/>
+  </LinearLayout>
 
 
 </LinearLayout>
