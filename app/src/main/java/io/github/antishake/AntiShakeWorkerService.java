@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class AntiShakeWorkerService extends Service implements SensorEventListener, MotionCorrectionListener {
-  private final AntiShake antiShake;
+  private AntiShake antiShake;
   private SensorManager sensorManager;
   private Sensor linearAccelerometer;
 
@@ -24,23 +24,19 @@ public class AntiShakeWorkerService extends Service implements SensorEventListen
   // TODO Get sampling rate from config
   private int samplingRate = 20000;
 
-  public AntiShakeWorkerService() {
-    antiShake = new AntiShake(this, AntiShakeUtils.getConfigProperties(getApplicationContext()));
-  }
-
   @Override
   public void onSensorChanged(SensorEvent sensorEvent) {
     antiShake.calculateTransformationVector(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2]);
 
-    long ts = System.currentTimeMillis();
-    if (ts - lastAccelTs > 20) {
-      lastAccelTs = ts;
-      // Broadcast accelerometer data
-      Intent intent = new Intent("AccelVal");
-      intent.putExtra("vals", sensorEvent.values);
-      intent.putExtra("ts", ts);
-      sendBroadcast(intent);
-    }
+//    long ts = System.currentTimeMillis();
+//    if (ts - lastAccelTs > 20) {
+//      lastAccelTs = ts;
+//       Broadcast accelerometer data
+//      Intent intent = new Intent("AccelVal");
+//      intent.putExtra("vals", sensorEvent.values);
+//      intent.putExtra("ts", ts);
+//      sendBroadcast(intent);
+//    }
   }
 
   @Override
@@ -64,6 +60,7 @@ public class AntiShakeWorkerService extends Service implements SensorEventListen
   @Override
   public void onStart(Intent intent, int startId) {
     super.onStart(intent, startId);
+    antiShake = new AntiShake(this, AntiShakeUtils.getConfigProperties(this));
     sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     linearAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
     sensorManager.registerListener(this, linearAccelerometer, samplingRate);
