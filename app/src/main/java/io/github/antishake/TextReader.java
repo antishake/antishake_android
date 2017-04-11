@@ -1,6 +1,8 @@
 package io.github.antishake;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.graphics.Path;
@@ -9,6 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -19,6 +22,8 @@ import com.github.barteksc.pdfviewer.ScrollBar;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -44,6 +49,9 @@ public class TextReader extends AppCompatActivity {
   private static final int UI_ANIMATION_DELAY = 300;
   private final Handler mHideHandler = new Handler();
   private View mContentView;
+
+  private Intent serviceIntent;
+
   private final Runnable mHidePart2Runnable = new Runnable() {
     @SuppressLint("InlinedApi")
     @Override
@@ -94,6 +102,7 @@ public class TextReader extends AppCompatActivity {
       return false;
     }
   };
+  private static PDFView pdfView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +111,7 @@ public class TextReader extends AppCompatActivity {
 
       // TextView SHALL DISPLAY PDF
 
-    PDFView pdfView= (PDFView) findViewById(R.id.pdfView);
+    pdfView= (PDFView) findViewById(R.id.pdfView);
 
    //TO ENABLE SCROLLING
 
@@ -153,6 +162,9 @@ public class TextReader extends AppCompatActivity {
     // operations to prevent the jarring behavior of controls going away
     // while interacting with the UI.
     findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+
+    serviceIntent = new Intent(this, AntiShakeWorkerService.class);
+    startService(serviceIntent);
   }
 
   @Override
@@ -163,6 +175,21 @@ public class TextReader extends AppCompatActivity {
     // created, to briefly hint to the user that UI controls
     // are available.
     delayedHide(100);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    if (updateThread != null) {
+      updateThread.interrupt();
+    }
+    stopService(serviceIntent);
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    stopService(serviceIntent);
   }
 
   private void toggle() {
@@ -206,5 +233,66 @@ public class TextReader extends AppCompatActivity {
   private void delayedHide(int delayMillis) {
     mHideHandler.removeCallbacks(mHideRunnable);
     mHideHandler.postDelayed(mHideRunnable, delayMillis);
+  }
+
+  private static UpdateThread updateThread;
+
+  public static class TransVectReceiver extends BroadcastReceiver {
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      if (intent.getAction().equals("TransVect")) {
+        ArrayList<Coordinate> vector = (ArrayList<Coordinate>) intent.getSerializableExtra("vector");
+
+        if (updateThread != null) {
+          updateThread.breakOff();
+          // Make sure that the previous thread is done running
+          try {
+            updateThread.join();
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+        }
+        updateThread = new UpdateThread(vector);
+        updateThread.start();
+      }
+    }
+  }
+
+  private static class UpdateThread extends Thread {
+
+    private List<Coordinate> coordinateList;
+    private boolean breakOff = false;
+
+    UpdateThread(List<Coordinate> list) {
+      this.coordinateList = list;
+    }
+
+    @Override
+    public void run() {
+      for (Coordinate coordinate : coordinateList) {
+        if (breakOff || isInterrupted()) {
+          // This means we have a new array available so we need to start over
+          // or that the activity has been closed
+          break;
+        }
+        // Move the screen
+        double t = System.currentTimeMillis();
+
+        pdfView.setTranslationX((float) coordinate.getX());
+        pdfView.setTranslationY((float) coordinate.getY());
+
+//        Log.d("AS", "Updated graph");
+        try {
+          sleep(5);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    void breakOff() {
+      breakOff = true;
+    }
   }
 }

@@ -30,6 +30,12 @@
             android:enabled="true"
             android:exported="true">
     </service>
+
+    <receiver android:name=".TextReader$TransVectReceiver">
+      <intent-filter>
+        <action android:name="TransVect"/>
+      </intent-filter>
+    </receiver>
   </application>
 
 </manifest>
