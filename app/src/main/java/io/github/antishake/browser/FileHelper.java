@@ -64,4 +64,8 @@ public class FileHelper {
 
     return fileItems;
   }
+
+  public static String byteToHuman(long filesize) {
+    return filesize + "b";
+  }
 }
