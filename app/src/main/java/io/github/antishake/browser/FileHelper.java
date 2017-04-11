@@ -30,6 +30,9 @@ public class FileHelper {
     Log.d("AS", "files list size: " + files.length);
 
     List<TextFileItem> fileItems = new ArrayList<>();
+    // Add an item to move back one directory
+    File prev = new File(root, "..");
+    fileItems.add(new TextFileItem("..", prev.length(), prev.lastModified(), prev.getAbsolutePath()));
 
     for (File file : files) {
       TextFileItem f = new TextFileItem(
@@ -49,6 +52,9 @@ public class FileHelper {
     File[] files = root.listFiles();
 
     List<VideoFileItem> fileItems = new ArrayList<>();
+    // Add an item to move back one directory
+    File prev = new File(root, "..");
+    fileItems.add(new VideoFileItem("..", prev.length(), prev.lastModified(), prev.getAbsolutePath(), 0));
 
     for (File file : files) {
       VideoFileItem f = new VideoFileItem(
