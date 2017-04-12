@@ -1,8 +1,10 @@
 package io.github.antishake;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,7 +18,7 @@ import android.widget.VideoView;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class VideoDemo extends AppCompatActivity {
+public class VideoPlayer extends AppCompatActivity {
 
   private static final String MOVIE_URL = "https://www.youtube.com/watch?v=69os9jzKF14";
   /**
@@ -101,8 +103,15 @@ public class VideoDemo extends AppCompatActivity {
     VideoView videoView =(VideoView)findViewById(R.id.videoView);
     MediaController mediaController= new MediaController(this);
     mediaController.setAnchorView(videoView);
-    Uri uri=Uri.parse(MOVIE_URL);
+    Intent intent = this.getIntent();
+    String path= intent.getExtras().getString("PATH");
+//    Uri uri=Uri.parse("android.resource://" + getPackageName() + "/"+R.raw.a123);
+// Uri uri=Uri.parse("/storage/emulated/0/Download/IMG_0968.mp4");//Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/aa123");
+//    Uri uri=Uri.parse("/storage/emulated/0/Download/aa123.3gp");
+//    Uri uri=Uri.parse("/storage/emulated/0/IMG_0215.mov");
+    Uri uri=Uri.parse(path);
     videoView.setMediaController(mediaController);
+//    videoView.setVideoPath(Environment.getExternalStorageDirectory().getAbsolutePath()+"/IMG_0215.mov");
     videoView.setVideoURI(uri);
     videoView.requestFocus();
 

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import io.github.antishake.R;
 import io.github.antishake.TextReader;
+import io.github.antishake.VideoPlayer;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -63,7 +64,10 @@ public class MyVideoFileRecyclerViewAdapter extends RecyclerView.Adapter<MyVideo
           mValues.addAll(FileHelper.retrieveVideoFiles(item.getPath()));
           notifyDataSetChanged();
         } else if (FileHelper.isFile(item.getPath())) {
-          // call VideoPlayer
+          Log.d("AS", "Opening file " + item.getPath());
+          Intent intent = new Intent(context, VideoPlayer.class);
+          intent.putExtra("PATH", item.getPath());
+          context.startActivity(intent);
         }
       }
     });
