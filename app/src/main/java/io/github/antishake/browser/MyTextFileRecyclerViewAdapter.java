@@ -11,16 +11,15 @@ import android.widget.TextView;
 import io.github.antishake.R;
 import io.github.antishake.TextReader;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 /**
- * * This Adapter provides a binding data set to the text tab view that is displayed within a RecyclerView.
  */
 public class MyTextFileRecyclerViewAdapter extends RecyclerView.Adapter<MyTextFileRecyclerViewAdapter.ViewHolder> {
+  private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
 
   private final List<TextFileItem> mValues;
   private final Context context;
@@ -45,15 +44,15 @@ public class MyTextFileRecyclerViewAdapter extends RecyclerView.Adapter<MyTextFi
   public void onBindViewHolder(final ViewHolder holder, int position) {
     holder.mItem = mValues.get(position);
     holder.mFilename.setText(mValues.get(position).getName());
-    holder.mFilesize.setText(String.valueOf(mValues.get(position).getFilesize()));
-    DateFormat formatter = new SimpleDateFormat("M/d/yyyy h:mm a", Locale.US);
-    holder.mModified.setText(formatter.format(new Date(mValues.get(position).getDateModified())).toString());
+    holder.mFilesize.setText(FileHelper.byteToHuman(mValues.get(position).getFilesize()));
+    // TODO Use simple date formatter to get a shorter string for this
+    holder.mModified.setText(DATE_FORMAT.format(mValues.get(position).getDateModified()));
 
     holder.mView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         // Load up the contents of folder
-        // or if it is a supported text/pdf file, open TextReader activity
+        // or if it is a file, open TextReader activity
         TextFileItem item = holder.mItem;
         if (FileHelper.isDirectory(item.getPath())) {
           Log.d("AS", "Opening directory " + item.getPath());
@@ -92,7 +91,7 @@ public class MyTextFileRecyclerViewAdapter extends RecyclerView.Adapter<MyTextFi
 
     @Override
     public String toString() {
-      return super.toString() + " '" + mFilename.getText() + "', '" + mFilesize.getText() + "', '" + mModified.getText() + "'";
+      return super.toString() + " '" + mFilesize.getText() + "'";
     }
   }
 }
