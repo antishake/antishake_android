@@ -25,7 +25,7 @@
       <ImageView
               android:layout_width="wrap_content"
               android:layout_height="match_parent"
-              android:src="@drawable/ic_logo"/>
+              android:src="@mipmap/ic_launcher"/>
 
     </android.support.v7.widget.Toolbar>
 
