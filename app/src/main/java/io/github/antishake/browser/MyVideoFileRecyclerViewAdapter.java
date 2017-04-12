@@ -46,8 +46,8 @@ public class MyVideoFileRecyclerViewAdapter extends RecyclerView.Adapter<MyVideo
   public void onBindViewHolder(final ViewHolder holder, int position) {
     holder.mItem = mValues.get(position);
     holder.mFilename.setText(mValues.get(position).getName());
-    holder.mFilesize.setText(String.valueOf(mValues.get(position).getFilesize()));
-    DateFormat formatter = new SimpleDateFormat("M/d/yyyy h:mm a", Locale.US);
+    holder.mFilesize.setText(FileHelper.byteToHuman(mValues.get(position).getFilesize()));
+    DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
     holder.mModified.setText(formatter.format(new Date(mValues.get(position).getDateModified())).toString());
     holder.mDuration.setText(String.valueOf(mValues.get(position).getDuration()));
 
