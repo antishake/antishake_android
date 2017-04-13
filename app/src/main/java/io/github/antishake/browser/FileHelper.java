@@ -3,6 +3,7 @@ package io.github.antishake.browser;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,12 @@ public class FileHelper {
     Log.d("AS", "Is file? " + root.isFile());
     Log.d("AS", "Is directory? " + root.isDirectory());
     Log.d("AS", "Listing files from " + path);
-    File[] files = root.listFiles();
+    File[] files = root.listFiles(new FilenameFilter() {
+      @Override
+      public boolean accept(File file, String s) {
+        return new File(root,s).isDirectory() || s.toLowerCase().endsWith(".txt") || s.toLowerCase().endsWith(".pdf");
+      }
+    });
     Log.d("AS", "files list size: " + files.length);
 
     List<TextFileItem> fileItems = new ArrayList<>();
@@ -49,7 +55,12 @@ public class FileHelper {
 
   public static List<VideoFileItem> retrieveVideoFiles(String path) {
     File root = new File(path);
-    File[] files = root.listFiles();
+    File[] files = root.listFiles(new FilenameFilter() {
+      @Override
+      public boolean accept(File file, String s) {
+        return new File(root,s).isDirectory() || s.toLowerCase().endsWith(".mp4") || s.toLowerCase().endsWith(".3gb");
+      }
+    });
 
     List<VideoFileItem> fileItems = new ArrayList<>();
     // Add an item to move back one directory
