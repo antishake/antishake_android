@@ -27,7 +27,12 @@ public class FileHelper {
     Log.d("AS", "Is file? " + root.isFile());
     Log.d("AS", "Is directory? " + root.isDirectory());
     Log.d("AS", "Listing files from " + path);
-    File[] files = root.listFiles();
+    File[] files = root.listFiles(new FilenameFilter() {
+      @Override
+      public boolean accept(File file, String s) {
+        return new File(root,s).isDirectory() || s.toLowerCase().endsWith(".txt") || s.toLowerCase().endsWith(".pdf");
+      }
+    });
     Log.d("AS", "files list size: " + files.length);
 
     List<TextFileItem> fileItems = new ArrayList<>();
@@ -53,7 +58,7 @@ public class FileHelper {
     File[] files = root.listFiles(new FilenameFilter() {
       @Override
       public boolean accept(File file, String s) {
-        return new File(root,s).isDirectory() || s.toLowerCase().endsWith(".txt") || s.toLowerCase().endsWith(".pdf");
+        return new File(root,s).isDirectory() || s.toLowerCase().endsWith(".mp4") || s.toLowerCase().endsWith(".3gb");
       }
     });
 
