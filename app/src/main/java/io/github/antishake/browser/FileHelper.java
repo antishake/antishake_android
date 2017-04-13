@@ -3,6 +3,7 @@ package io.github.antishake.browser;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +50,12 @@ public class FileHelper {
 
   public static List<VideoFileItem> retrieveVideoFiles(String path) {
     File root = new File(path);
-    File[] files = root.listFiles();
+    File[] files = root.listFiles(new FilenameFilter() {
+      @Override
+      public boolean accept(File file, String s) {
+        return new File(root,s).isDirectory() || s.toLowerCase().endsWith(".txt") || s.toLowerCase().endsWith(".pdf");
+      }
+    });
 
     List<VideoFileItem> fileItems = new ArrayList<>();
     // Add an item to move back one directory
