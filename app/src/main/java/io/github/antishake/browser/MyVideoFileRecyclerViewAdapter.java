@@ -60,9 +60,12 @@ public class MyVideoFileRecyclerViewAdapter extends RecyclerView.Adapter<MyVideo
         VideoFileItem item = holder.mItem;
         if (FileHelper.isDirectory(item.getPath())) {
           Log.d("AS", "Opening directory " + item.getPath());
-          mValues.clear();
-          mValues.addAll(FileHelper.retrieveVideoFiles(item.getPath()));
-          notifyDataSetChanged();
+          List<VideoFileItem> fileList;
+          if((fileList = FileHelper.retrieveVideoFiles(item.getPath())) != null) {
+            mValues.clear();
+            mValues.addAll(fileList);
+            notifyDataSetChanged();
+          }
         } else if (FileHelper.isFile(item.getPath())) {
           Log.d("AS", "Opening file " + item.getPath());
           Intent intent = new Intent(context, VideoPlayer.class);

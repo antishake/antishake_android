@@ -30,10 +30,12 @@ public class FileHelper {
     File[] files = root.listFiles(new FilenameFilter() {
       @Override
       public boolean accept(File file, String s) {
-        return new File(root,s).isDirectory() || s.toLowerCase().endsWith(".txt") || s.toLowerCase().endsWith(".pdf");
+        return new File(root, s).isDirectory() || s.toLowerCase().endsWith(".txt") || s.toLowerCase().endsWith(".pdf");
       }
     });
-    Log.d("AS", "files list size: " + files.length);
+    Log.d("AS", "files list size: " + ((files == null) ? 0 : files.length));
+
+    if (files == null) return null;
 
     List<TextFileItem> fileItems = new ArrayList<>();
     // Add an item to move back one directory
@@ -58,9 +60,11 @@ public class FileHelper {
     File[] files = root.listFiles(new FilenameFilter() {
       @Override
       public boolean accept(File file, String s) {
-        return new File(root,s).isDirectory() || s.toLowerCase().endsWith(".mp4") || s.toLowerCase().endsWith(".3gb");
+        return new File(root, s).isDirectory() || s.toLowerCase().endsWith(".mp4") || s.toLowerCase().endsWith(".3gb");
       }
     });
+
+    if (files == null) return null;
 
     List<VideoFileItem> fileItems = new ArrayList<>();
     // Add an item to move back one directory

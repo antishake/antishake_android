@@ -56,9 +56,12 @@ public class MyTextFileRecyclerViewAdapter extends RecyclerView.Adapter<MyTextFi
         TextFileItem item = holder.mItem;
         if (FileHelper.isDirectory(item.getPath())) {
           Log.d("AS", "Opening directory " + item.getPath());
-          mValues.clear();
-          mValues.addAll(FileHelper.retrieveTextFiles(item.getPath()));
-          notifyDataSetChanged();
+          List<TextFileItem> fileList;
+          if((fileList = FileHelper.retrieveTextFiles(item.getPath())) != null) {
+            mValues.clear();
+            mValues.addAll(fileList);
+            notifyDataSetChanged();
+          }
         } else if (FileHelper.isFile(item.getPath())) {
           Log.d("AS", "Opening file " + item.getPath());
           Intent intent = new Intent(context, TextReader.class);
