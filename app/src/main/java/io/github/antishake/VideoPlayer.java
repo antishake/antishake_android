@@ -105,13 +105,8 @@ public class VideoPlayer extends AppCompatActivity {
     mediaController.setAnchorView(videoView);
     Intent intent = this.getIntent();
     String path= intent.getExtras().getString("PATH");
-//    Uri uri=Uri.parse("android.resource://" + getPackageName() + "/"+R.raw.a123);
-// Uri uri=Uri.parse("/storage/emulated/0/Download/IMG_0968.mp4");//Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/aa123");
-//    Uri uri=Uri.parse("/storage/emulated/0/Download/aa123.3gp");
-//    Uri uri=Uri.parse("/storage/emulated/0/IMG_0215.mov");
     Uri uri=Uri.parse(path);
     videoView.setMediaController(mediaController);
-//    videoView.setVideoPath(Environment.getExternalStorageDirectory().getAbsolutePath()+"/IMG_0215.mov");
     videoView.setVideoURI(uri);
     videoView.requestFocus();
 
