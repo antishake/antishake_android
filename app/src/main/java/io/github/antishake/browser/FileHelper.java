@@ -60,7 +60,7 @@ public class FileHelper {
     File[] files = root.listFiles(new FilenameFilter() {
       @Override
       public boolean accept(File file, String s) {
-        return new File(root, s).isDirectory() || s.toLowerCase().endsWith(".mp4") || s.toLowerCase().endsWith(".3gb");
+        return new File(root, s).isDirectory() || s.toLowerCase().endsWith(".mp4") || s.toLowerCase().endsWith(".3gp");
       }
     });
 
