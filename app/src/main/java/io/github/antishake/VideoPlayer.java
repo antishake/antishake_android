@@ -105,20 +105,15 @@ public class VideoPlayer extends AppCompatActivity {
     mediaController.setAnchorView(videoView);
     Intent intent = this.getIntent();
     String path= intent.getExtras().getString("PATH");
-//    Uri uri=Uri.parse("android.resource://" + getPackageName() + "/"+R.raw.a123);
-// Uri uri=Uri.parse("/storage/emulated/0/Download/IMG_0968.mp4");//Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/aa123");
-//    Uri uri=Uri.parse("/storage/emulated/0/Download/aa123.3gp");
-//    Uri uri=Uri.parse("/storage/emulated/0/IMG_0215.mov");
     Uri uri=Uri.parse(path);
     videoView.setMediaController(mediaController);
-//    videoView.setVideoPath(Environment.getExternalStorageDirectory().getAbsolutePath()+"/IMG_0215.mov");
     videoView.setVideoURI(uri);
     videoView.requestFocus();
 
     videoView.start();
     mVisible = true;
     mControlsView = findViewById(R.id.fullscreen_content_controls);
-    mContentView = findViewById(R.id.fullscreen_content);
+    mContentView = findViewById(R.id.videoView);
 
     videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener(){
       public void onPrepared(MediaPlayer mediaPlayer) {
@@ -138,7 +133,7 @@ public class VideoPlayer extends AppCompatActivity {
     // Upon interacting with UI controls, delay any scheduled hide()
     // operations to prevent the jarring behavior of controls going away
     // while interacting with the UI.
-    findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+//    findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
   }
 
   @Override
