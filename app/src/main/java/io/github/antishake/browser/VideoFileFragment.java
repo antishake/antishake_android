@@ -2,6 +2,7 @@ package io.github.antishake.browser;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import io.github.antishake.R;
+
+import java.io.File;
 
 /**
  * A fragment representing a list of Items.
@@ -23,7 +26,7 @@ public class VideoFileFragment extends Fragment {
   private static final String ARG_COLUMN_COUNT = "column-count";
   // TODO: Customize parameters
   private int mColumnCount = 3;
-  private OnListFragmentInteractionListener mListener;
+  private File ROOT_PATH = Environment.getExternalStorageDirectory();
 
   /**
    * Mandatory empty constructor for the fragment manager to instantiate the
@@ -65,7 +68,7 @@ public class VideoFileFragment extends Fragment {
       } else {
         recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
       }
-//      recyclerView.setAdapter(new MyVideoFileRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+      recyclerView.setAdapter(new MyVideoFileRecyclerViewAdapter(getContext(), ROOT_PATH.getAbsolutePath()));
     }
     return view;
   }
@@ -79,8 +82,7 @@ public class VideoFileFragment extends Fragment {
   @Override
   public void onDetach() {
     super.onDetach();
-    mListener = null;
-  }
+    }
 
   /**
    * This interface must be implemented by activities that contain this

@@ -11,12 +11,15 @@ import android.widget.TextView;
 import io.github.antishake.R;
 import io.github.antishake.TextReader;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  */
 public class MyTextFileRecyclerViewAdapter extends RecyclerView.Adapter<MyTextFileRecyclerViewAdapter.ViewHolder> {
+  private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
 
   private final List<TextFileItem> mValues;
   private final Context context;
@@ -41,9 +44,9 @@ public class MyTextFileRecyclerViewAdapter extends RecyclerView.Adapter<MyTextFi
   public void onBindViewHolder(final ViewHolder holder, int position) {
     holder.mItem = mValues.get(position);
     holder.mFilename.setText(mValues.get(position).getName());
-    holder.mFilesize.setText(String.valueOf(mValues.get(position).getFilesize()));
+    holder.mFilesize.setText(FileHelper.byteToHuman(mValues.get(position).getFilesize()));
     // TODO Use simple date formatter to get a shorter string for this
-    holder.mModified.setText(new Date(mValues.get(position).getDateModified()).toString());
+    holder.mModified.setText(DATE_FORMAT.format(mValues.get(position).getDateModified()));
 
     holder.mView.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -53,9 +56,12 @@ public class MyTextFileRecyclerViewAdapter extends RecyclerView.Adapter<MyTextFi
         TextFileItem item = holder.mItem;
         if (FileHelper.isDirectory(item.getPath())) {
           Log.d("AS", "Opening directory " + item.getPath());
-          mValues.clear();
-          mValues.addAll(FileHelper.retrieveTextFiles(item.getPath()));
-          notifyDataSetChanged();
+          List<TextFileItem> fileList;
+          if((fileList = FileHelper.retrieveTextFiles(item.getPath())) != null) {
+            mValues.clear();
+            mValues.addAll(fileList);
+            notifyDataSetChanged();
+          }
         } else if (FileHelper.isFile(item.getPath())) {
           Log.d("AS", "Opening file " + item.getPath());
           Intent intent = new Intent(context, TextReader.class);
