@@ -1,12 +1,10 @@
 package io.github.antishake;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.Loader;
+import android.content.*;
 import android.graphics.Path;
 import android.os.Environment;
+import android.os.IBinder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +12,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,11 +24,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.github.antishake.R.id.textView;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class TextReader extends AppCompatActivity {
+public class TextReader extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
   /**
    * Whether or not the system UI should be auto-hidden after
    * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -103,6 +104,8 @@ public class TextReader extends AppCompatActivity {
     }
   };
   private static PDFView pdfView;
+  private boolean m_bound;
+  private BroadcastReceiver m_receiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -163,8 +166,27 @@ public class TextReader extends AppCompatActivity {
     // while interacting with the UI.
     findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
-    serviceIntent = new Intent(this, AntiShakeWorkerService.class);
-    startService(serviceIntent);
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    Intent intent = new Intent(this, AntiShakeWorkerService.class);
+    bindService(intent, m_connection, Context.BIND_AUTO_CREATE);
+    m_bound = true;
+    IntentFilter intentFilter = new IntentFilter("TransVect");
+    m_receiver = new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+        Coordinate transform = (Coordinate) intent.getSerializableExtra("vector");
+
+//        Log.d("AS", transformArray.get(transformArray.size()-1).getX() + ", " + transformArray.get(transformArray.size()-1).getY());
+        pdfView.setTranslationX(5.0f * (float) transform.getX());
+        pdfView.setTranslationY(5.0f * (float) transform.getY());
+
+      }
+    };
+    registerReceiver(m_receiver, intentFilter);
   }
 
   @Override
@@ -183,13 +205,11 @@ public class TextReader extends AppCompatActivity {
     if (updateThread != null) {
       updateThread.interrupt();
     }
-    stopService(serviceIntent);
-  }
-
-  @Override
-  protected void onStop() {
-    super.onStop();
-    stopService(serviceIntent);
+    if (m_bound) {
+      unbindService(m_connection);
+      m_bound = false;
+    }
+    unregisterReceiver(m_receiver);
   }
 
   private void toggle() {
@@ -244,17 +264,21 @@ public class TextReader extends AppCompatActivity {
       if (intent.getAction().equals("TransVect")) {
         ArrayList<Coordinate> vector = (ArrayList<Coordinate>) intent.getSerializableExtra("vector");
 
-        if (updateThread != null) {
-          updateThread.breakOff();
-          // Make sure that the previous thread is done running
-          try {
-            updateThread.join();
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-        }
-        updateThread = new UpdateThread(vector);
-        updateThread.start();
+        Log.d("AS", System.nanoTime() + ": " + vector.get(0).getX() + "," + vector.get(0).getY());
+
+        pdfView.setTranslationX((float) vector.get(0).getX());
+        pdfView.setTranslationY((float) vector.get(0).getY());
+//        if (updateThread != null) {
+//          updateThread.breakOff();
+//          // Make sure that the previous thread is done running
+//          try {
+//            updateThread.join();
+//          } catch (InterruptedException e) {
+//            e.printStackTrace();
+//          }
+//        }
+//        updateThread = new UpdateThread(vector);
+//        updateThread.start();
       }
     }
   }
@@ -284,7 +308,7 @@ public class TextReader extends AppCompatActivity {
 
 //        Log.d("AS", "Updated graph");
         try {
-          sleep(5);
+          sleep(20);
         } catch (InterruptedException e) {
           e.printStackTrace();
         }
@@ -294,5 +318,27 @@ public class TextReader extends AppCompatActivity {
     void breakOff() {
       breakOff = true;
     }
+  }
+
+  private ServiceConnection m_connection = new ServiceConnection() {
+    @Override
+    public void onServiceConnected(ComponentName className, IBinder binder) {
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName className) {
+    }
+  };
+
+  @Override
+  public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+  }
+
+  @Override
+  public void onStartTrackingTouch(SeekBar seekBar) {
+  }
+
+  @Override
+  public void onStopTrackingTouch(SeekBar seekBar) {
   }
 }
