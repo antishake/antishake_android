@@ -19,7 +19,7 @@
         style="?metaButtonBarStyle"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_gravity="center"
+        android:layout_alignParentBottom="true"
         android:background="#000"
         android:orientation="horizontal">
 
