@@ -2,6 +2,7 @@ package io.github.antishake;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
@@ -13,6 +14,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.VideoView;
+
+import static io.github.antishake.R.id.videoView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -100,17 +103,18 @@ public class VideoPlayer extends AppCompatActivity {
      * videoView is the id for the VideoView that I created in the activity_video_demo.xml
      */
 
-    VideoView videoView =(VideoView)findViewById(R.id.videoView);
-    MediaController mediaController= new MediaController(this);
+    VideoView videoView = (VideoView) findViewById(R.id.videoView);
+    MediaController mediaController = new MediaController(this);
     mediaController.setAnchorView(videoView);
     Intent intent = this.getIntent();
-    String path= intent.getExtras().getString("PATH");
-    Uri uri=Uri.parse(path);
+    String path = intent.getExtras().getString("PATH");
+    Uri uri = Uri.parse(path);
     videoView.setMediaController(mediaController);
     videoView.setVideoURI(uri);
     videoView.requestFocus();
 
     videoView.start();
+
     mVisible = true;
     mControlsView = findViewById(R.id.fullscreen_content_controls);
     mContentView = findViewById(R.id.videoView);
@@ -136,15 +140,30 @@ public class VideoPlayer extends AppCompatActivity {
 //    findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
   }
 
+
+
+
+  // **@Override
+  //protected void onSaveInstanceState (Bundle outState) {
+    //outState.putInt("pos", videoView.getCurrentPosition()); // save it here
+  //}
+ @Override
+ public void onConfigurationChanged(Configuration newConfig) {
+   super.onConfigurationChanged(newConfig);
+ }
+
+
   @Override
   protected void onPostCreate(Bundle savedInstanceState) {
     super.onPostCreate(savedInstanceState);
+
 
     // Trigger the initial hide() shortly after the activity has been
     // created, to briefly hint to the user that UI controls
     // are available.
     delayedHide(100);
   }
+
 
   private void toggle() {
     if (mVisible) {

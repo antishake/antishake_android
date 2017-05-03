@@ -3,7 +3,7 @@
           package="io.github.antishake">
 
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-  <!--<uses-permission android:name="android.permission.INTERNET"/>-->
+  <uses-permission android:name="android.permission.INTERNET"/>
   <application
           android:allowBackup="true"
           android:icon="@mipmap/ic_launcher"
@@ -22,7 +22,10 @@
     </activity>
 
     <activity android:name=".TextReader"/>
-    <activity android:name=".VideoPlayer"/>
+
+    <activity android:name=".VideoPlayer"
+        android:configChanges="orientation|screenSize"
+        android:exported="true"/>
 
     <service
             android:name=".AntiShakeWorkerService"
