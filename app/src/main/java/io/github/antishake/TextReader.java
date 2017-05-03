@@ -1,30 +1,30 @@
 package io.github.antishake;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.Loader;
-import android.graphics.Path;
-import android.os.Environment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.content.*;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.SeekBar;
 import android.widget.Toast;
-
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.ScrollBar;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class TextReader extends AppCompatActivity {
+public class TextReader extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
   /**
    * Whether or not the system UI should be auto-hidden after
    * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -44,6 +44,9 @@ public class TextReader extends AppCompatActivity {
   private static final int UI_ANIMATION_DELAY = 300;
   private final Handler mHideHandler = new Handler();
   private View mContentView;
+
+  private Intent serviceIntent;
+
   private final Runnable mHidePart2Runnable = new Runnable() {
     @SuppressLint("InlinedApi")
     @Override
@@ -94,33 +97,35 @@ public class TextReader extends AppCompatActivity {
       return false;
     }
   };
+  private static PDFView pdfView;
+  private boolean m_bound;
+  private BroadcastReceiver m_receiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_text_reader);
 
-      // TextView SHALL DISPLAY PDF
+    // TextView SHALL DISPLAY PDF
 
-    PDFView pdfView= (PDFView) findViewById(R.id.pdfView);
+    pdfView = (PDFView) findViewById(R.id.pdfView);
 
-   //TO ENABLE SCROLLING
+    //TO ENABLE SCROLLING
 
     ScrollBar scrollBar = (ScrollBar) findViewById(R.id.scrollBar);
     pdfView.setScrollBar(scrollBar);
-      scrollBar.setHorizontal(false);
+    scrollBar.setHorizontal(false);
 
-     //UNPACK DATA FROM INTENT
+    //UNPACK DATA FROM INTENT
 
     Intent i = this.getIntent();
-    String path= i.getExtras().getString("PATH");
+    String path = i.getExtras().getString("PATH");
 
     System.out.println(path);
-     //GET THE PDF FILE
+    //GET THE PDF FILE
     File file = new File(path);
 
-    if (file.canRead())
-    {
+    if (file.canRead()) {
       //LOAD IT
       pdfView.fromFile(file).defaultPage(1).onLoad(new OnLoadCompleteListener()
 
@@ -131,7 +136,7 @@ public class TextReader extends AppCompatActivity {
         }
       }).load();
 
-  } else {
+    } else {
       System.out.println("Cannot read file");
     }
 
@@ -153,6 +158,28 @@ public class TextReader extends AppCompatActivity {
     // operations to prevent the jarring behavior of controls going away
     // while interacting with the UI.
     findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    Intent intent = new Intent(this, AntiShakeWorkerService.class);
+    bindService(intent, m_connection, Context.BIND_AUTO_CREATE);
+    m_bound = true;
+    IntentFilter intentFilter = new IntentFilter("TransVect");
+    m_receiver = new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+        Coordinate transform = (Coordinate) intent.getSerializableExtra("vector");
+
+//        Log.d("AS", transformArray.get(transformArray.size()-1).getX() + ", " + transformArray.get(transformArray.size()-1).getY());
+        pdfView.setTranslationX(5.0f * (float) transform.getX());
+        pdfView.setTranslationY(5.0f * (float) transform.getY());
+
+      }
+    };
+    registerReceiver(m_receiver, intentFilter);
   }
 
   @Override
@@ -163,6 +190,19 @@ public class TextReader extends AppCompatActivity {
     // created, to briefly hint to the user that UI controls
     // are available.
     delayedHide(100);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    if (updateThread != null) {
+      updateThread.interrupt();
+    }
+    if (m_bound) {
+      unbindService(m_connection);
+      m_bound = false;
+    }
+    unregisterReceiver(m_receiver);
   }
 
   private void toggle() {
@@ -206,5 +246,92 @@ public class TextReader extends AppCompatActivity {
   private void delayedHide(int delayMillis) {
     mHideHandler.removeCallbacks(mHideRunnable);
     mHideHandler.postDelayed(mHideRunnable, delayMillis);
+  }
+
+  private static UpdateThread updateThread;
+
+  public static class TransVectReceiver extends BroadcastReceiver {
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      if (intent.getAction().equals("TransVect")) {
+        ArrayList<Coordinate> vector = (ArrayList<Coordinate>) intent.getSerializableExtra("vector");
+
+        Log.d("AS", System.nanoTime() + ": " + vector.get(0).getX() + "," + vector.get(0).getY());
+
+        pdfView.setTranslationX((float) vector.get(0).getX());
+        pdfView.setTranslationY((float) vector.get(0).getY());
+//        if (updateThread != null) {
+//          updateThread.breakOff();
+//          // Make sure that the previous thread is done running
+//          try {
+//            updateThread.join();
+//          } catch (InterruptedException e) {
+//            e.printStackTrace();
+//          }
+//        }
+//        updateThread = new UpdateThread(vector);
+//        updateThread.start();
+      }
+    }
+  }
+
+  private static class UpdateThread extends Thread {
+
+    private List<Coordinate> coordinateList;
+    private boolean breakOff = false;
+
+    UpdateThread(List<Coordinate> list) {
+      this.coordinateList = list;
+    }
+
+    @Override
+    public void run() {
+      for (Coordinate coordinate : coordinateList) {
+        if (breakOff || isInterrupted()) {
+          // This means we have a new array available so we need to start over
+          // or that the activity has been closed
+          break;
+        }
+        // Move the screen
+        double t = System.currentTimeMillis();
+
+        pdfView.setTranslationX((float) coordinate.getX());
+        pdfView.setTranslationY((float) coordinate.getY());
+
+//        Log.d("AS", "Updated graph");
+        try {
+          sleep(20);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    void breakOff() {
+      breakOff = true;
+    }
+  }
+
+  private ServiceConnection m_connection = new ServiceConnection() {
+    @Override
+    public void onServiceConnected(ComponentName className, IBinder binder) {
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName className) {
+    }
+  };
+
+  @Override
+  public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+  }
+
+  @Override
+  public void onStartTrackingTouch(SeekBar seekBar) {
+  }
+
+  @Override
+  public void onStopTrackingTouch(SeekBar seekBar) {
   }
 }
