@@ -4,6 +4,8 @@
     <string name="section_format">Hello World from section: %1$d</string>
 
     <string name="title_activity_text_reader">TextReader</string>
+    <string name="copy_right">Copyright © Anti Shake, %1$d</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="about">About</string>
 </resources>

@@ -1,6 +1,7 @@
 package io.github.antishake;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -106,6 +107,10 @@ public class BrowserActivity extends AppCompatActivity {
     //noinspection SimplifiableIfStatement
     if (id == R.id.action_settings) {
       return true;
+    }
+    if (id == R.id.action_about) {
+      Intent about =new Intent(this,AboutActivity.class);
+      startActivity(about);
     }
 
     return super.onOptionsItemSelected(item);
