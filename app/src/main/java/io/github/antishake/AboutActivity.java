@@ -44,12 +44,6 @@ public class AboutActivity extends AppCompatActivity {
         copyRightsElement.setIconTint(mehdi.sakout.aboutpage.R.color.about_item_icon_color);
         copyRightsElement.setIconNightTint(android.R.color.white);
         copyRightsElement.setGravity(Gravity.CENTER);
-        copyRightsElement.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(AboutActivity.this, copyrights, Toast.LENGTH_SHORT).show();
-            }
-        });
         return copyRightsElement;
     }
 

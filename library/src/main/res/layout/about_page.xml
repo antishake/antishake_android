@@ -5,7 +5,8 @@
     <LinearLayout style="@style/about_About.wrapper">
         <LinearLayout style="@style/about_sub_wrapper">
             <ImageView android:id="@+id/image" style="@style/about_image"/>
-            <TextView android:id="@+id/description" style="@style/about_description"/>
+            <TextView android:id="@+id/description" style="@style/about_description"
+                android:layout_gravity="center_vertical|right"/>
         </LinearLayout>
 
         <View style="@style/about_separator"/>
