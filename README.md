@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/antishake/antishake_android.svg?branch=master)](https://travis-ci.org/antishake/antishake_android)
+
 # Antishake_android
 Android app utilizing anti shake library
 
