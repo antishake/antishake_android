@@ -1,27 +1,30 @@
 package io.github.antishake;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.res.Configuration;
+import android.content.*;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.IBinder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.MediaController;
+import android.widget.SeekBar;
 import android.widget.VideoView;
 
-import static io.github.antishake.R.id.videoView;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class VideoPlayer extends AppCompatActivity {
+public class VideoPlayer extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
   private static final String MOVIE_URL = "https://www.youtube.com/watch?v=69os9jzKF14";
   /**
@@ -43,6 +46,11 @@ public class VideoPlayer extends AppCompatActivity {
   private static final int UI_ANIMATION_DELAY = 300;
   private final Handler mHideHandler = new Handler();
   private View mContentView;
+
+  private static VideoView videoView;
+  private boolean m_bound;
+  private BroadcastReceiver m_receiver;
+
   private final Runnable mHidePart2Runnable = new Runnable() {
     @SuppressLint("InlinedApi")
     @Override
@@ -103,7 +111,7 @@ public class VideoPlayer extends AppCompatActivity {
      * videoView is the id for the VideoView that I created in the activity_video_demo.xml
      */
 
-    VideoView videoView = (VideoView) findViewById(R.id.videoView);
+    videoView = (VideoView) findViewById(R.id.videoView);
     MediaController mediaController = new MediaController(this);
     mediaController.setAnchorView(videoView);
     Intent intent = this.getIntent();
@@ -114,16 +122,15 @@ public class VideoPlayer extends AppCompatActivity {
     videoView.requestFocus();
 
     videoView.start();
-
     mVisible = true;
     mControlsView = findViewById(R.id.fullscreen_content_controls);
     mContentView = findViewById(R.id.videoView);
 
-    videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener(){
+    videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
       public void onPrepared(MediaPlayer mediaPlayer) {
         videoView.start();
       }
-      });
+    });
 
     // Set up the user interaction to manually show or hide the system UI.
     mContentView.setOnClickListener(new View.OnClickListener() {
@@ -140,30 +147,35 @@ public class VideoPlayer extends AppCompatActivity {
 //    findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
   }
 
+  @Override
+  public void onResume() {
+    super.onResume();
+    Intent intent = new Intent(this, AntiShakeWorkerService.class);
+    bindService(intent, m_connection, Context.BIND_AUTO_CREATE);
+    m_bound = true;
+    IntentFilter intentFilter = new IntentFilter("TransVect");
+    m_receiver = new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+        Coordinate transform = (Coordinate) intent.getSerializableExtra("vector");
 
+        videoView.setTranslationX(5.0f * (float) transform.getX());
+        videoView.setTranslationY(5.0f * (float) transform.getY());
 
-
-  // **@Override
-  //protected void onSaveInstanceState (Bundle outState) {
-    //outState.putInt("pos", videoView.getCurrentPosition()); // save it here
-  //}
- @Override
- public void onConfigurationChanged(Configuration newConfig) {
-   super.onConfigurationChanged(newConfig);
- }
-
+      }
+    };
+    registerReceiver(m_receiver, intentFilter);
+  }
 
   @Override
   protected void onPostCreate(Bundle savedInstanceState) {
     super.onPostCreate(savedInstanceState);
-
 
     // Trigger the initial hide() shortly after the activity has been
     // created, to briefly hint to the user that UI controls
     // are available.
     delayedHide(100);
   }
-
 
   private void toggle() {
     if (mVisible) {
@@ -206,5 +218,103 @@ public class VideoPlayer extends AppCompatActivity {
   private void delayedHide(int delayMillis) {
     mHideHandler.removeCallbacks(mHideRunnable);
     mHideHandler.postDelayed(mHideRunnable, delayMillis);
+  }
+
+  public static class TransVectReceiver extends BroadcastReceiver {
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      if (intent.getAction().equals("TransVect")) {
+        ArrayList<Coordinate> vector = (ArrayList<Coordinate>) intent.getSerializableExtra("vector");
+
+        Log.d("AS", System.nanoTime() + ": " + vector.get(0).getX() + "," + vector.get(0).getY());
+
+        videoView.setTranslationX((float) vector.get(0).getX());
+        videoView.setTranslationY((float) vector.get(0).getY());
+//        if (updateThread != null) {
+//          updateThread.breakOff();
+//          // Make sure that the previous thread is done running
+//          try {
+//            updateThread.join();
+//          } catch (InterruptedException e) {
+//            e.printStackTrace();
+//          }
+//        }
+//        updateThread = new UpdateThread(vector);
+//        updateThread.start();
+      }
+    }
+  }
+
+  private static class UpdateThread extends Thread {
+
+    private List<Coordinate> coordinateList;
+    private boolean breakOff = false;
+
+    UpdateThread(List<Coordinate> list) {
+      this.coordinateList = list;
+    }
+
+    @Override
+    public void run() {
+      for (Coordinate coordinate : coordinateList) {
+        if (breakOff || isInterrupted()) {
+          // This means we have a new array available so we need to start over
+          // or that the activity has been closed
+          break;
+        }
+        // Move the screen
+        double t = System.currentTimeMillis();
+
+        videoView.setTranslationX((float) coordinate.getX());
+        videoView.setTranslationY((float) coordinate.getY());
+
+//        Log.d("AS", "Updated graph");
+        try {
+          sleep(20);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    void breakOff() {
+      breakOff = true;
+    }
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    if (m_bound) {
+      unbindService(m_connection);
+      m_bound = false;
+    }
+    unregisterReceiver(m_receiver);
+  }
+
+  private ServiceConnection m_connection = new ServiceConnection() {
+    @Override
+    public void onServiceConnected(ComponentName className, IBinder binder) {
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName className) {
+    }
+  };
+
+  @Override
+  public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+  }
+
+  @Override
+  public void onStartTrackingTouch(SeekBar seekBar) {
+
+  }
+
+  @Override
+  public void onStopTrackingTouch(SeekBar seekBar) {
+
   }
 }
