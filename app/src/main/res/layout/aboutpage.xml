@@ -13,9 +13,9 @@ android:background="#FFFFFF"
     android:layout_width="150dp"
     android:layout_height="200dp"
     android:scaleType="fitCenter"
-    android:layout_marginStart="87dp"
+    android:layout_marginStart="89dp"
     android:layout_alignParentTop="true"
-     />
+    android:layout_alignStart="@+id/version" />
 <!--TextView
     android:id="@+id/about"
     android:padding="20dp"
@@ -75,6 +75,7 @@ android:background="#FFFFFF"
     android:layout_below="@+id/blankline1"
     android:layout_height="wrap_content" />
 <LinearLayout
+    android:id="@+id/link"
     android:layout_below="@+id/connect"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -86,10 +87,34 @@ android:background="#FFFFFF"
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/website"
         android:text="Visit our Website  "
         android:textSize="20dp"
         android:layout_below="@+id/blankline1"
         />
 </LinearLayout>
+    <LinearLayout
+        android:layout_below="@+id/link"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp">
+        <ImageView
+            android:src="@mipmap/GitHub"
+            android:layout_width="50dp"
+            android:layout_height="25dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/github"
+            android:text="Fork us on GitHub  "
+            android:textSize="20dp"
+            android:layout_below="@+id/blankline1"
+            />
+    </LinearLayout>
+    <View
+        android:id="@+id/blankline2"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/link"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#E0E0E0" />
 </RelativeLayout>
