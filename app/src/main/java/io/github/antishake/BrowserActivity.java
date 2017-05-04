@@ -1,6 +1,7 @@
 package io.github.antishake;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import io.github.antishake.browser.TextFileFragment;
 import io.github.antishake.browser.VideoFileFragment;
+import io.github.antishake.utils.AboutPage;
 
 public class BrowserActivity extends AppCompatActivity {
 
@@ -106,6 +108,12 @@ public class BrowserActivity extends AppCompatActivity {
     //noinspection SimplifiableIfStatement
     if (id == R.id.action_settings) {
       return true;
+    }
+    if(id ==R.id.action_about){
+      Intent about =new Intent(this, AboutPage.class);
+      startActivity(about);
+
+
     }
 
     return super.onOptionsItemSelected(item);
