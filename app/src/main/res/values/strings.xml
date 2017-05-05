@@ -6,4 +6,5 @@
     <string name="title_activity_text_reader">TextReader</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="about_page">About</string>
 </resources>
