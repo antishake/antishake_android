@@ -37,9 +37,25 @@ public class MyVideoFileRecyclerViewAdapter extends RecyclerView.Adapter<MyVideo
   }
 
   @Override
+  public int getItemViewType(int position) {
+    VideoFileItem item = mValues.get(position);
+    if (FileHelper.isDirectory(item.getPath())) {
+      return 0;
+    } else {
+      return 1;
+    }
+  }
+
+  @Override
   public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View view = LayoutInflater.from(parent.getContext())
-      .inflate(R.layout.video_file_list, parent, false);
+    View view;
+    if (viewType == 0 ) {
+      view = LayoutInflater.from(parent.getContext())
+        .inflate(R.layout.video_folder, parent, false);
+    } else {
+      view = LayoutInflater.from(parent.getContext())
+        .inflate(R.layout.video_file_list, parent, false);
+    }
     return new ViewHolder(view);
   }
 
