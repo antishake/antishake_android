@@ -34,9 +34,25 @@ public class MyTextFileRecyclerViewAdapter extends RecyclerView.Adapter<MyTextFi
   }
 
   @Override
+  public int getItemViewType(int position) {
+    TextFileItem item = mValues.get(position);
+    if (FileHelper.isDirectory(item.getPath())) {
+      return 0;
+    } else {
+      return 1;
+    }
+  }
+
+  @Override
   public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View view = LayoutInflater.from(parent.getContext())
-      .inflate(R.layout.filelist, parent, false);
+    View view;
+    if (viewType == 0 ) {
+      view = LayoutInflater.from(parent.getContext())
+        .inflate(R.layout.text_folder, parent, false);
+    } else {
+      view = LayoutInflater.from(parent.getContext())
+        .inflate(R.layout.text_file, parent, false);
+    }
     return new ViewHolder(view);
   }
 
