@@ -95,7 +95,7 @@ android:background="#FFFFFF"
             android:id="@+id/website"
             android:layout_marginBottom="4dp"
             android:text="Visit our Website  "
-            android:textSize="16dp"
+            android:textSize="14dp"
 
             />
     </LinearLayout>
@@ -123,7 +123,7 @@ android:background="#FFFFFF"
             android:layout_height="wrap_content"
             android:layout_below="@+id/blankline1"
             android:text="Fork us on GitHub  "
-            android:textSize="16dp" />
+            android:textSize="14dp" />
     </LinearLayout>
     <View
         android:id="@+id/blankline3"
@@ -146,7 +146,7 @@ android:background="#FFFFFF"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:text="Copyrights c 2017 "
+            android:text="Copyright © Anti Shake 2017 "
             android:textSize="16dp" />
     </LinearLayout>
 </RelativeLayout>
