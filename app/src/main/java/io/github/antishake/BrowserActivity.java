@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import io.github.antishake.browser.TextFileFragment;
 import io.github.antishake.browser.VideoFileFragment;
 import io.github.antishake.utils.AboutPage;
+import io.github.antishake.utils.SettingsPage;
 
 public class BrowserActivity extends AppCompatActivity {
 
@@ -107,7 +108,8 @@ public class BrowserActivity extends AppCompatActivity {
 
     //noinspection SimplifiableIfStatement
     if (id == R.id.action_settings) {
-      return true;
+      Intent settings = new Intent(this, SettingsPage.class);
+      startActivity(settings);
     }
     if(id ==R.id.action_about){
       Intent about =new Intent(this, AboutPage.class);

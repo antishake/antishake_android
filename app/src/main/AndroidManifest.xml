@@ -30,9 +30,10 @@
         <service
             android:name=".AntiShakeWorkerService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
-        <activity android:name=".utils.AboutPage"></activity>
+        <activity android:name=".utils.AboutPage" />
+        <activity android:name=".utils.SettingsPage"></activity>
     </application>
 
 </manifest>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/settings"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:fontFamily="sans-serif-medium"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="7dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+    </LinearLayout>
+    <View
+        android:id="@+id/blankline"
+        android:layout_marginTop="2dp"
+        android:layout_below="@+id/heading"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#E0E0E0" />
+    <LinearLayout
+        android:id="@+id/imagestab"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/blankline">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Image Stabilization "
+            android:textSize="18dp"/>
+        <Switch
+            android:id="@+id/antishake"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+    <!--LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imagestab">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Night Mode "
+            android:textSize="18dp"/>
+        <Switch
+            android:id="@+id/nightmode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout-->
+
+</RelativeLayout>
