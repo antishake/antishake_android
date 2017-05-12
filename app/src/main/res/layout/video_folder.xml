@@ -12,21 +12,23 @@
   <ImageView
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          app:srcCompat="@mipmap/video_icon"
+          app:srcCompat="@mipmap/folder_icon"
           android:id="@+id/imageView"/>
 
   <android.support.v7.widget.AppCompatCheckedTextView
-          android:layout_width="wrap_content"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:id="@+id/filename"
           android:text="File name"
           android:textSize="14dp"
+          android:textAlignment="center"
           android:textColor="#616161"/>
 
   <LinearLayout
           android:orientation="horizontal"
           android:layout_width="match_parent"
-          android:layout_height="match_parent">
+          android:layout_height="match_parent"
+          android:visibility="invisible">
 
     <android.support.v7.widget.AppCompatCheckedTextView
             android:layout_width="match_parent"
@@ -36,6 +38,7 @@
             android:textColor="#757575"
             android:textSize="12sp"
             android:layout_weight="1"
+            android:textAlignment="center"
             />
 
     <android.support.v7.widget.AppCompatCheckedTextView
@@ -45,15 +48,20 @@
             android:text="1000s"
             android:textSize="12sp"
             android:layout_weight="1"
+            android:textAlignment="center"
             android:textColor="#757575"/>
+
   </LinearLayout>
 
   <android.support.v7.widget.AppCompatCheckedTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="#757575"
-        android:id="@+id/modified"
-        android:text="11/11/2050"/>
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textSize="12sp"
+          android:textColor="#757575"
+          android:id="@+id/modified"
+          android:text="11/11/2050"
+          android:layout_weight="1"
+          android:textAlignment="center"
+          android:visibility="invisible"/>
 
 </LinearLayout>

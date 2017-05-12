@@ -18,7 +18,7 @@ android:background="#FFFFFF"
         android:layout_width="150dp"
         android:layout_height="200dp"
         android:scaleType="fitCenter"
-        android:layout_marginStart="87dp"
+        android:layout_marginStart="113dp"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/textView" />
     <!--TextView
@@ -74,8 +74,8 @@ android:background="#FFFFFF"
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="10dp"
         android:id="@+id/connect"
-        android:text="Conncet with us  "
-        android:textSize="20dp"
+        android:text="Connect with us  "
+        android:textSize="16dp"
         android:layout_width="wrap_content"
         android:layout_below="@+id/blankline1"
         android:layout_height="wrap_content" />
@@ -87,14 +87,15 @@ android:background="#FFFFFF"
         android:layout_margin="10dp">
         <ImageView
             android:src="@mipmap/link"
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="25dp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/website"
+            android:layout_marginBottom="4dp"
             android:text="Visit our Website  "
-            android:textSize="20dp"
+            android:textSize="14dp"
 
             />
     </LinearLayout>
@@ -113,16 +114,16 @@ android:background="#FFFFFF"
         android:layout_margin="14dp">
         <ImageView
             android:src="@mipmap/github"
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="35dp" />
+
         <TextView
+            android:id="@+id/github"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/github"
-            android:text="Fork us on GitHub  "
-            android:textSize="20dp"
             android:layout_below="@+id/blankline1"
-            />
+            android:text="Fork us on GitHub  "
+            android:textSize="14dp" />
     </LinearLayout>
     <View
         android:id="@+id/blankline3"
@@ -145,7 +146,7 @@ android:background="#FFFFFF"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:text="Copyrights c 2017 "
+            android:text="Copyright © Anti Shake 2017 "
             android:textSize="16dp" />
     </LinearLayout>
 </RelativeLayout>
