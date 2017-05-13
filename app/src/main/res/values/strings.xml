@@ -1,5 +1,10 @@
 <resources>
-  <string name="app_name">Anti Shake</string>
-  <string name="action_settings">Settings</string>
-  <string name="section_format">Hello World from section: %1$d</string>
+    <string name="app_name">Anti Shake</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <string name="title_activity_text_reader">TextReader</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="about_page">About</string>
 </resources>

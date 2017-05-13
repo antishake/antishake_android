@@ -2,6 +2,7 @@ package io.github.antishake.browser;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import io.github.antishake.R;
-import io.github.antishake.dummy.DummyContent;
-import io.github.antishake.dummy.DummyContent.DummyItem;
+
+import java.io.File;
 
 /**
  * A fragment representing a list of Items.
@@ -25,7 +26,8 @@ public class TextFileFragment extends Fragment {
   private static final String ARG_COLUMN_COUNT = "column-count";
   // TODO: Customize parameters
   private int mColumnCount = 1;
-  private OnListFragmentInteractionListener mListener;
+
+  private File ROOT_PATH = Environment.getExternalStorageDirectory();
 
   /**
    * Mandatory empty constructor for the fragment manager to instantiate the
@@ -67,7 +69,7 @@ public class TextFileFragment extends Fragment {
       } else {
         recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
       }
-      recyclerView.setAdapter(new MyTextFileRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+      recyclerView.setAdapter(new MyTextFileRecyclerViewAdapter(getContext(), ROOT_PATH.getAbsolutePath()));
     }
     return view;
   }
@@ -76,32 +78,10 @@ public class TextFileFragment extends Fragment {
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-    if (context instanceof OnListFragmentInteractionListener) {
-      mListener = (OnListFragmentInteractionListener) context;
-    } else {
-      throw new RuntimeException(context.toString()
-        + " must implement OnListFragmentInteractionListener");
-    }
   }
 
   @Override
   public void onDetach() {
     super.onDetach();
-    mListener = null;
-  }
-
-  /**
-   * This interface must be implemented by activities that contain this
-   * fragment to allow an interaction in this fragment to be communicated
-   * to the activity and potentially other fragments contained in that
-   * activity.
-   * <p/>
-   * See the Android Training lesson <a href=
-   * "http://developer.android.com/training/basics/fragments/communicating.html"
-   * >Communicating with Other Fragments</a> for more information.
-   */
-  public interface OnListFragmentInteractionListener {
-    // TODO: Update argument type and name
-    void onListFragmentInteraction(DummyItem item);
   }
 }
