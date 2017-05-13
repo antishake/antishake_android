@@ -61,7 +61,6 @@ public class MyTextFileRecyclerViewAdapter extends RecyclerView.Adapter<MyTextFi
     holder.mItem = mValues.get(position);
     holder.mFilename.setText(mValues.get(position).getName());
     holder.mFilesize.setText(FileHelper.byteToHuman(mValues.get(position).getFilesize()));
-    // TODO Use simple date formatter to get a shorter string for this
     holder.mModified.setText(DATE_FORMAT.format(mValues.get(position).getDateModified()));
 
     holder.mView.setOnClickListener(new View.OnClickListener() {
